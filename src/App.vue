@@ -68,7 +68,7 @@
       <section id="section-1" class="active">
         <div class="content">
           <div class="text-content">
-            <h1>创建杰出的开发体验</h1>
+            <h1 class="text-5xl font-extrabold text-primary-800 mb-6">创建杰出的开发体验</h1>
             <div class="card">
               <h2>智能代码编辑器</h2>
               <p>高级代码编辑功能，实时错误检测，智能代码补全以及深度的代码分析。无论项目规模如何，都能提供无与伦比的开发效率。</p>
@@ -98,8 +98,9 @@
             </div>
           </div>
           <div class="text-content">
+            <h1 class="text-5xl font-extrabold text-primary-800 mb-6">强大开发工具</h1>
             <div class="card">
-              <h2>强大开发工具</h2>
+              <!-- <h2>强大开发工具</h2> -->
               <p>集成调试器、版本控制、数据库工具、测试运行器、部署工具等功能于一身的开发环境，让您只需一个应用程序即可完成所有开发工作。</p>
               <router-link to="/compile" class="btn">探索工具 <i class="fas fa-arrow-right"></i></router-link>
             </div>
@@ -110,8 +111,9 @@
       <section id="section-3">
         <div class="content">
           <div class="text-content">
+            <h1 class="text-5xl font-extrabold text-primary-800 mb-6">高效的代码调试</h1>
             <div class="card">
-              <h2>高效的代码调试</h2>
+              <!-- <h2>高效的代码调试</h2> -->
               <p>高级断点系统、表达式评估、变量监控等功能强大且直观的调试工具，让您在开发过程中能够快速定位和解决问题。</p>
               <div class="code-block">
                 <div class="code-header">
@@ -150,8 +152,9 @@
             </div>
           </div>
           <div class="text-content">
+            <h1 class="text-5xl font-extrabold text-primary-800 mb-6">智能重构</h1>
             <div class="card">
-              <h2>智能重构</h2>
+              <!-- <h2>智能重构</h2> -->
               <p>强大的重构工具，帮助您安全而高效地改进代码结构。无论是重命名标识符、提取方法、变量或接口，还是更改函数签名，都能轻松应对。</p>
               <router-link to="/projects" class="btn">立即体验 <i class="fas fa-arrow-right"></i></router-link>
             </div>
