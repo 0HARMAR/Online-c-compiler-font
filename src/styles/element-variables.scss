@@ -1,0 +1,40 @@
+// This file is used to override Element Plus default variables with Material Design colors
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': #3F51B5, // Indigo 500
+    ),
+    'success': (
+      'base': #4CAF50, // Green 500
+    ),
+    'warning': (
+      'base': #FFC107, // Amber 500
+    ),
+    'danger': (
+      'base': #FF5722, // Deep Orange 500
+    ),
+    'info': (
+      'base': #9E9E9E, // Grey 500
+    ),
+  ),
+  $bg-color: (
+    'page': #f5f5f5, // Grey 100
+    'base': #ffffff,
+  ),
+  $text-color: (
+    'primary': rgba(0, 0, 0, 0.87),
+    'regular': rgba(0, 0, 0, 0.60),
+    'secondary': rgba(0, 0, 0, 0.38),
+    'placeholder': rgba(0, 0, 0, 0.38),
+    'disabled': rgba(0, 0, 0, 0.38),
+  ),
+  $border-color: (
+    'base': #e0e0e0, // Grey 300
+    'light': #eeeeee, // Grey 200
+    'lighter': #f5f5f5, // Grey 100
+    'extra-light': #fafafa, // Grey 50
+  )
+);
+
+// Import all other Element Plus styles after overriding variables
+@use "element-plus/theme-chalk/src/index.scss" as *; 

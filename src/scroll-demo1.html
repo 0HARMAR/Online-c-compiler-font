@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetBrains风格产品展示</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --jet-primary: #1e2024;
+            --jet-accent: #4f56db;
+            --jet-secondary: #6c62f8;
+            --jet-light: #a5a8f8;
+            --jet-white: #f0f1ff;
+            --jet-card: rgba(36, 38, 49, 0.85);
+        }
+        
+        body {
+            font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--jet-white);
+            background: linear-gradient(135deg, var(--jet-primary), #1a2029);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* JetBrains Logo样式 */
+        .jet-logo {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--jet-white);
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+        
+        .jet-logo:hover {
+            transform: translateY(-3px);
+        }
+        
+        .jet-logo svg {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .logo-circle {
+            fill: url(#jetbrains-gradient);
+        }
+        
+        .logo-letters {
+            fill: white;
+        }
+        
+        /* 导航菜单 */
+        .nav-container {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            z-index: 1000;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-item {
+            margin-left: 30px;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, 
+        .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 主容器 */
+        .scroll-container {
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* 每个展示部分 */
+        .section {
+            min-height: 100vh;
+            padding: 120px 10% 100px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1.2s cubic-bezier(0.19, 1, 0.22, 1), 
+                        transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        
+        .section.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .section-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            z-index: -1;
+        }
+        
+        /* 内容容器 */
+        .content {
+            max-width: 1200px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 80px;
+        }
+        
+        /* 文字内容 */
+        .text-content {
+            flex: 1;
+            z-index: 2;
+        }
+        
+        /* 产品卡片 */
+        .product-card {
+            background: var(--jet-card);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            transform: scale(0.95);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(124, 124, 255, 0.1);
+        }
+        
+        .section.active .product-card {
+            transform: scale(1);
+        }
+        
+        /* 标题样式 */
+        .section-title {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, var(--jet-light), white);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 15px rgba(165, 168, 248, 0.2);
+        }
+        
+        .product-title {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: white;
+        }
+        
+        .product-subtitle {
+            font-size: 20px;
+            font-weight: 300;
+            margin-bottom: 30px;
+            color: var(--jet-light);
+        }
+        
+        .product-description {
+            font-size: 17px;
+            line-height: 1.8;
+            color: var(--jet-white);
+            margin-bottom: 35px;
+        }
+        
+        /* 功能列表 */
+        .features-list {
+            margin-bottom: 40px;
+            padding-left: 20px;
+        }
+        
+        .feature-item {
+            position: relative;
+            margin-bottom: 15px;
+            padding-left: 30px;
+        }
+        
+        .feature-item:before {
+            content: "\f00c";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--jet-light);
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, var(--jet-accent), var(--jet-secondary));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 5px 20px rgba(79, 86, 219, 0.5);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(79, 86, 219, 0.8);
+        }
+        
+        .btn i {
+            margin-left: 10px;
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover i {
+            transform: translateX(4px);
+        }
+        
+        .btn.outline {
+            background: transparent;
+            border: 2px solid var(--jet-secondary);
+            color: var(--jet-light);
+            margin-left: 20px;
+        }
+        
+        /* 图形部分 */
+        .graphic-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+        
+        .product-image {
+            width: 100%;
+            max-width: 480px;
+            border-radius: 15px;
+            overflow: hidden;
+            transform: rotate(-3deg) translateY(20px);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .section.active .product-image {
+            transform: rotate(0deg) translateY(0);
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+        }
+        
+        /* 滚动指示器 */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .scroll-indicator.active {
+            opacity: 1;
+        }
+        
+        .scroll-indicator .text {
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .mouse-icon {
+            display: inline-block;
+            width: 28px;
+            height: 48px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 14px;
+            position: relative;
+        }
+        
+        .mouse-icon::after {
+            content: "";
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            width: 4px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 2px;
+            transform: translateX(-50%);
+            animation: scroll 2s infinite;
+        }
+        
+        @keyframes scroll {
+            0% {
+                transform: translate(-50%, 0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, 18px);
+                opacity: 0;
+            }
+        }
+        
+        /* 产品切换指示器 */
+        .progress-container {
+            position: fixed;
+            top: 50%;
+            right: 40px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+        
+        .progress-item {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .progress-item:hover {
+            transform: scale(1.2);
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .progress-item.active {
+            background: white;
+            transform: scale(1.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+        
+        .progress-item.active::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.15);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            white-space: nowrap;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* 波浪背景 */
+        .wave-bg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1100px) {
+            .content {
+                flex-direction: column;
+                gap: 60px;
+                padding-top: 40px;
+            }
+            
+            .nav-container {
+                top: 20px;
+                right: 20px;
+            }
+            
+            .jet-logo {
+                top: 20px;
+                left: 20px;
+            }
+            
+            .section {
+                padding: 120px 5% 100px;
+            }
+            
+            .section-title {
+                font-size: 36px;
+            }
+            
+            .product-title {
+                font-size: 28px;
+            }
+            
+            .product-card {
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                gap: 40px;
+            }
+            
+            .section {
+                padding: 100px 5% 80px;
+            }
+            
+            .progress-container {
+                display: none;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .btn-group {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn.outline {
+                margin-left: 0;
+            }
+            
+            .section-title {
+                font-size: 32px;
+            }
+            
+            .product-title {
+                font-size: 24px;
+            }
+            
+            .product-description {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- JetBrains Logo -->
+    <a href="#" class="jet-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+            <defs>
+                <linearGradient id="jetbrains-gradient" x1="1" x2="62.75" y1="63" y2="1.25" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#FF9419"></stop>
+                    <stop offset=".43" stop-color="#FF021D"></stop>
+                    <stop offset=".99" stop-color="#E600FF"></stop>
+                </linearGradient>
+            </defs>
+            <path class="logo-circle" d="M22.14 0H59c2.76 0 5 2.24 5 5v36.86c0 2.65-1.055 5.195-2.93 7.07L48.93 61.07A10.003 10.003 0 0 1 41.86 64H5c-2.76 0-5-2.24-5-5V22.14c0-2.65 1.055-5.195 2.93-7.07L15.07 2.93A10.003 10.003 0 0 1 22.14 0Z"></path>
+            <g class="logo-letters">
+                <path d="M11.92 21.49a.87.87 0 0 0 .1-.42V16h1.635v5.19c0 .43-.09.815-.275 1.145-.185.33-.45.585-.785.77-.34.185-.725.275-1.16.275H10v-1.505h1.22c.16 0 .3-.035.42-.1s.215-.16.28-.285ZM10 51h16v3H10v-3ZM16.595 20.37h3.475v-1.38h-3.475v-1.565h3.835V16h-5.425v7.38h5.53v-1.42h-3.94v-1.59ZM23.32 17.465h-2.19V16h6v1.465h-2.18v5.915h-1.63v-5.915Z"></path>
+                <path fill-rule="evenodd" d="M14.935 29.295a2.155 2.155 0 0 0-.4-.16 1.612 1.612 0 0 0 .94-.71 1.64 1.64 0 0 0 .23-.87c0-.375-.1-.71-.305-1.005a2.016 2.016 0 0 0-.86-.69c-.37-.165-.79-.25-1.26-.25H10v7.38h3.345c.495 0 .94-.085 1.325-.26.39-.175.69-.415.905-.725.215-.31.32-.66.32-1.06 0-.365-.085-.69-.255-.98a1.75 1.75 0 0 0-.705-.67Zm-3.35-2.445h1.45c.2 0 .38.035.53.11a.81.81 0 0 1 .36.31c.085.135.13.29.13.47s-.045.35-.13.49-.205.245-.36.32c-.155.075-.33.115-.53.115h-1.45V26.85Zm2.5 4.47a.91.91 0 0 1-.395.325c-.17.075-.365.115-.59.115h-1.515v-1.895H13.1c.22 0 .41.04.585.12.17.08.305.195.4.34.095.145.14.315.14.505s-.045.35-.14.49ZM22.46 29.18c-.225.355-.54.635-.95.83l-.005-.005c-.08.035-.16.07-.245.1l1.685 2.885H21.08l-1.495-2.69H18.52v2.69h-1.635v-7.38h3.23c.535 0 1.005.095 1.41.29.405.195.72.465.94.82.22.355.33.75.33 1.22s-.11.885-.335 1.24Zm-2.465-2.24h-1.47v2.045h1.47c.23 0 .425-.04.595-.125.17-.08.3-.2.39-.355.09-.155.135-.34.135-.545 0-.205-.045-.385-.135-.54a.897.897 0 0 0-.39-.355 1.305 1.305 0 0 0-.595-.125ZM25.74 25.615l-2.635 7.38h1.66l.52-1.63h2.735l.56 1.63h1.63l-2.7-7.38h-1.77Zm-.085 4.515.85-2.605.1-.475.1.475.905 2.605h-1.955Z" clip-rule="evenodd"></path>
+                <path d="M30.95 25.615h1.685v7.38H30.95v-7.38ZM38.785 30.605l-3.175-4.99h-1.59v7.38h1.49V28l3.16 4.995h1.61v-7.38h-1.495v4.99ZM46.065 29.01c.285.205.51.46.67.77h-.005c.16.31.24.645.24 1.01 0 .445-.12.845-.355 1.2s-.565.63-.99.83c-.425.2-.915.3-1.46.3-.545 0-1.03-.1-1.45-.295a2.378 2.378 0 0 1-.995-.82 2.169 2.169 0 0 1-.37-1.22h1.635c0 .19.055.36.155.505.1.145.24.255.425.335.18.08.395.12.62.12.225 0 .425-.035.59-.105a.91.91 0 0 0 .39-.3c.095-.13.14-.28.14-.445 0-.2-.065-.375-.19-.51s-.295-.23-.515-.285l-1.33-.275a2.436 2.436 0 0 1-.915-.395c-.26-.19-.465-.43-.61-.715a2.085 2.085 0 0 1-.215-.96c0-.44.11-.83.335-1.175.22-.345.535-.61.935-.805.4-.195.85-.29 1.37-.29.52 0 .98.095 1.38.28.405.185.72.445.945.775.225.33.345.71.355 1.14h-1.635c0-.16-.045-.3-.13-.425s-.205-.22-.36-.29c-.155-.07-.34-.105-.54-.105s-.375.035-.53.1a.822.822 0 0 0-.355.275.69.69 0 0 0-.125.415c0 .175.06.32.175.44.115.12.275.2.47.245l1.255.26c.37.07.7.21.99.415Z"></path>
+            </g>
+        </svg>
+        JetBrains
+    </a>
+    
+    <!-- 导航菜单 -->
+    <div class="nav-container">
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="#" class="nav-link">产品</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">解决方案</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">支持</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">学习</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">商店</a></li>
+        </ul>
+    </div>
+    
+    <!-- 主滚动容器 -->
+    <div class="scroll-container" id="scrollContainer">
+        <!-- 第一部分 - 标题页 -->
+        <section id="section-1" class="section active">
+            <div class="content">
+                <div class="text-content">
+                    <h1 class="section-title">为开发者创造卓越的工具</h1>
+                    <p class="product-subtitle">JetBrains 提供一系列智能开发工具，帮助开发者更高效、更愉悦地编写代码。</p>
+                    <div class="btn-group">
+                        <a href="#" class="btn">所有产品 <i class="fas fa-arrow-right"></i></a>
+                        <a href="#" class="btn outline">下载试用版</a>
+                    </div>
+                </div>
+                <div class="graphic-content">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1555099962-4199c345e514?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="JetBrains IDE">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="scroll-indicator active">
+                <div class="text">向下滑动探索</div>
+                <div class="mouse-icon"></div>
+            </div>
+        </section>
+        
+        <!-- 第二部分 - IntelliJ IDEA -->
+        <section id="section-2" class="section">
+            <div class="content">
+                <div class="graphic-content">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1616469829687-381a87f71632?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="IntelliJ IDEA">
+                    </div>
+                </div>
+                <div class="text-content">
+                    <div class="product-card">
+                        <h2 class="product-title">IntelliJ IDEA</h2>
+                        <p class="product-description">功能强大且符合人体工程学的 Java IDE，支持多种语言和框架。提供智能代码补全、实时错误检测和强大的重构工具。</p>
+                        
+                        <ul class="features-list">
+                            <li class="feature-item">深度理解代码和上下文</li>
+                            <li class="feature-item">与所有现代框架集成</li>
+                            <li class="feature-item">智能重构和代码分析</li>
+                            <li class="feature-item">内置开发工具和调试器</li>
+                        </ul>
+                        
+                        <div class="btn-group">
+                            <a href="#" class="btn">下载试用 <i class="fas fa-download"></i></a>
+                            <a href="#" class="btn outline">了解更多</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 第三部分 - PyCharm -->
+        <section id="section-3" class="section">
+            <div class="content">
+                <div class="text-content">
+                    <div class="product-card">
+                        <h2 class="product-title">PyCharm</h2>
+                        <p class="product-description">专为Python开发者设计的IDE，提供强大的调试、测试和分析工具，支持数据科学和Web开发。</p>
+                        
+                        <ul class="features-list">
+                            <li class="feature-item">智能代码补全和重构</li>
+                            <li class="feature-item">强大的调试器和测试运行器</li>
+                            <li class="feature-item">与Jupyter笔记本集成</li>
+                            <li class="feature-item">集成的数据库工具</li>
+                        </ul>
+                        
+                        <div class="btn-group">
+                            <a href="#" class="btn">下载试用 <i class="fas fa-download"></i></a>
+                            <a href="#" class="btn outline">了解更多</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="graphic-content">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="PyCharm">
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 第四部分 - WebStorm -->
+        <section id="section-4" class="section">
+            <div class="content">
+                <div class="graphic-content">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="WebStorm">
+                    </div>
+                </div>
+                <div class="text-content">
+                    <div class="product-card">
+                        <h2 class="product-title">WebStorm</h2>
+                        <p class="product-description">现代JavaScript开发工具，为前端开发提供智能编码辅助，支持React、Vue、Angular等主流框架。</p>
+                        
+                        <ul class="features-list">
+                            <li class="feature-item">智能代码补全和导航</li>
+                            <li class="feature-item">强大的重构能力</li>
+                            <li class="feature-item">与流行的构建工具集成</li>
+                            <li class="feature-item">强大的调试和测试支持</li>
+                        </ul>
+                        
+                        <div class="btn-group">
+                            <a href="#" class="btn">下载试用 <i class="fas fa-download"></i></a>
+                            <a href="#" class="btn outline">了解更多</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="scroll-indicator">
+                <div class="text">继续浏览</div>
+                <div class="mouse-icon"></div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- 产品切换指示器 -->
+    <div class="progress-container">
+        <div class="progress-item active" data-index="0" data-tooltip="首页"></div>
+        <div class="progress-item" data-index="1" data-tooltip="IntelliJ IDEA"></div>
+        <div class="progress-item" data-index="2" data-tooltip="PyCharm"></div>
+        <div class="progress-item" data-index="3" data-tooltip="WebStorm"></div>
+    </div>
+    
+    <!-- 波浪背景 -->
+    <svg class="wave-bg" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,256L48,245.3C96,235,192,213,288,192C384,171,480,149,576,165.3C672,181,768,235,864,234.7C960,235,1056,181,1152,170.7C1248,160,1344,192,1392,208L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" fill="#4f56db" opacity="0.4"></path>
+    </svg>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrollContainer = document.getElementById('scrollContainer');
+            const sections = document.querySelectorAll('.section');
+            const progressItems = document.querySelectorAll('.progress-item');
+            const scrollIndicators = document.querySelectorAll('.scroll-indicator');
+            
+            let currentSection = 0;
+            
+            // 滚动事件监听
+            scrollContainer.addEventListener('scroll', function() {
+                const scrollPosition = scrollContainer.scrollTop;
+                const sectionHeight = window.innerHeight;
+                const newSection = Math.floor(scrollPosition / sectionHeight);
+                
+                // 如果切换到新部分
+                if (newSection !== currentSection) {
+                    sections.forEach((section, index) => {
+                        if (index === newSection) {
+                            section.classList.add('active');
+                        } else {
+                            section.classList.remove('active');
+                        }
+                    });
+                    
+                    progressItems.forEach((item, index) => {
+                        if (index === newSection) {
+                            item.classList.add('active');
+                        } else {
+                            item.classList.remove('active');
+                        }
+                    });
+                    
+                    scrollIndicators.forEach((indicator, index) => {
+                        if (index === newSection) {
+                            indicator.classList.add('active');
+                        } else {
+                            indicator.classList.remove('active');
+                        }
+                    });
+                    
+                    currentSection = newSection;
+                }
+            });
+            
+            // 进度指示器点击事件
+            progressItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    sections.forEach(section => section.classList.remove('active'));
+                    sections[index].classList.add('active');
+                    
+                    progressItems.forEach(item => item.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 滚动到相应部分
+                    scrollContainer.scrollTo({
+                        top: index * window.innerHeight,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            
+            // 视差效果
+            document.addEventListener('mousemove', function(e) {
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                
+                const cards = document.querySelectorAll('.product-card');
+                cards.forEach(card => {
+                    card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+                });
+                
+                const images = document.querySelectorAll('.product-image');
+                images.forEach(image => {
+                    image.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+                });
+            });
+            
+            // 自动滚动效果
+            let autoScroll = true;
+            let scrollTimeout;
+            
+            function startAutoScroll() {
+                if (autoScroll) {
+                    const nextSection = (currentSection + 1) % sections.length;
+                    scrollContainer.scrollTo({
+                        top: nextSection * window.innerHeight,
+                        behavior: 'smooth'
+                    });
+                    
+                    scrollTimeout = setTimeout(startAutoScroll, 5000);
+                }
+            }
+            
+            // 用户交互时暂停自动滚动
+            scrollContainer.addEventListener('touchstart', function() {
+                autoScroll = false;
+                clearTimeout(scrollTimeout);
+            });
+            
+            scrollContainer.addEventListener('wheel', function() {
+                autoScroll = false;
+                clearTimeout(scrollTimeout);
+            });
+            
+            // 开始自动滚动
+            startAutoScroll();
+        });
+    </script>
+</body>
+</html>

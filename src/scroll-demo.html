@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetBrains风格下拉展示页面</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            color: #333;
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            height: 100vh;
+            position: relative;
+        }
+        
+        /* 主容器 */
+        .scroll-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+        
+        /* 每个展示部分 */
+        section {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+            opacity: 0.2;
+            transform: translateY(20px);
+            transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        
+        section.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 内容容器 */
+        .content {
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 40px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 60px;
+        }
+        
+        /* 文字内容 */
+        .text-content {
+            flex: 1;
+            z-index: 2;
+        }
+        
+        /* 图片/图形容器 */
+        .graphic-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+        
+        /* 卡片样式 */
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            transform: scale(0.95);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        section.active .card {
+            transform: scale(1);
+        }
+        
+        /* 标题样式 */
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, #2c3e50, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #34495e;
+            margin-bottom: 30px;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6);
+        }
+        
+        .btn i {
+            margin-left: 8px;
+            font-size: 0.9rem;
+        }
+        
+        /* 进度指示器 */
+        .progress-container {
+            position: fixed;
+            top: 50%;
+            right: 40px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+        
+        .progress-item {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .progress-item.active {
+            background: white;
+            transform: scale(1.3);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+        
+        /* 图形元素 */
+        .graphic {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            border-radius: 30px;
+            overflow: hidden;
+            transform: rotate(-5deg) translateY(20px);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        section.active .graphic {
+            transform: rotate(0deg) translateY(0);
+        }
+        
+        .graphic-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 3rem;
+        }
+        
+        /* 代码块样式 */
+        .code-block {
+            background: #2d2d2d;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 25px 0;
+        }
+        
+        .code-header {
+            background: #1e1e1e;
+            padding: 10px 15px;
+            color: #9cdcfe;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .code-content {
+            padding: 20px;
+            font-family: 'Fira Code', monospace;
+            color: #d4d4d4;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
+        /* 页脚 */
+        .footer {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .content {
+                flex-direction: column;
+                gap: 40px;
+                padding-top: 60px;
+            }
+            
+            .text-content, .graphic-content {
+                flex: none;
+                width: 100%;
+                max-width: 600px;
+            }
+            
+            .progress-container {
+                display: none;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .graphic {
+                width: 250px;
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 进度指示器 -->
+    <div class="progress-container">
+        <div class="progress-item active" data-index="0"></div>
+        <div class="progress-item" data-index="1"></div>
+        <div class="progress-item" data-index="2"></div>
+        <div class="progress-item" data-index="3"></div>
+    </div>
+    
+    <!-- 主滚动容器 -->
+    <div class="scroll-container" id="scrollContainer">
+        <!-- 第一部分 -->
+        <section id="section-1" class="active">
+            <div class="content">
+                <div class="text-content">
+                    <h1>创建杰出的开发体验</h1>
+                    <div class="card">
+                        <h2>智能代码编辑器</h2>
+                        <p>高级代码编辑功能，实时错误检测，智能代码补全以及深度的代码分析。无论项目规模如何，都能提供无与伦比的开发效率。</p>
+                        <a href="/compile" class="btn">开始使用和探索工具 <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="graphic-content">
+                    <div class="graphic">
+                        <div class="graphic-inner">
+                            <i class="fas fa-code"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <p>滚动继续浏览更多功能</p>
+            </div>
+        </section>
+        
+        <!-- 第二部分 -->
+        <section id="section-2">
+            <div class="content">
+                <div class="graphic-content">
+                    <div class="graphic">
+                        <div class="graphic-inner">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-content">
+                    <div class="card">
+                        <h2>强大开发工具</h2>
+                        <p>集成调试器、版本控制、数据库工具、测试运行器、部署工具等功能于一身的开发环境，让您只需一个应用程序即可完成所有开发工作。</p>
+                        <a href="/compile" class="btn">探索工具 <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 第三部分 -->
+        <section id="section-3">
+            <div class="content">
+                <div class="text-content">
+                    <div class="card">
+                        <h2>高效的代码调试</h2>
+                        <p>高级断点系统、表达式评估、变量监控等功能强大且直观的调试工具，让您在开发过程中能够快速定位和解决问题。</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>debug_demo.js</span>
+                                <span>JavaScript</span>
+                            </div>
+                            <div class="code-content">
+                                function calculateFactorial(n) {<br>
+                                &nbsp;&nbsp;if (n === 0) return 1;<br>
+                                &nbsp;&nbsp;return n * calculateFactorial(n - 1);<br>
+                                }<br><br>
+                                const result = calculateFactorial(5);<br>
+                                console.log(result); // 输出：120
+                            </div>
+                        </div>
+                        <a href="/terminal" class="btn">学习调试 <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="graphic-content">
+                    <div class="graphic">
+                        <div class="graphic-inner">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 第四部分 -->
+        <section id="section-4">
+            <div class="content">
+                <div class="graphic-content">
+                    <div class="graphic">
+                        <div class="graphic-inner">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-content">
+                    <div class="card">
+                        <h2>智能重构</h2>
+                        <p>强大的重构工具，帮助您安全而高效地改进代码结构。无论是重命名标识符、提取方法、变量或接口，还是更改函数签名，都能轻松应对。</p>
+                        <a href="/project" class="btn">立即体验 <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <p>现代化开发工具集</p>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrollContainer = document.getElementById('scrollContainer');
+            const sections = document.querySelectorAll('section');
+            const progressItems = document.querySelectorAll('.progress-item');
+            
+            // 初始化活动部分
+            let currentSection = 0;
+            
+            // 滚动事件监听
+            scrollContainer.addEventListener('scroll', function() {
+                // 计算当前可见部分索引
+                const scrollPosition = scrollContainer.scrollTop;
+                const sectionHeight = window.innerHeight;
+                
+                const newSection = Math.round(scrollPosition / sectionHeight);
+                
+                // 如果切换到新部分
+                if (newSection !== currentSection) {
+                    sections.forEach((section, index) => {
+                        if (index === newSection) {
+                            section.classList.add('active');
+                        } else {
+                            section.classList.remove('active');
+                        }
+                    });
+                    
+                    progressItems.forEach((item, index) => {
+                        if (index === newSection) {
+                            item.classList.add('active');
+                        } else {
+                            item.classList.remove('active');
+                        }
+                    });
+                    
+                    currentSection = newSection;
+                }
+            });
+            
+            // 进度指示器点击事件
+            progressItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    scrollContainer.scrollTo({
+                        top: index * window.innerHeight,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            
+            // 触摸设备支持
+            let touchStartY = 0;
+            
+            scrollContainer.addEventListener('touchstart', function(e) {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+            
+            scrollContainer.addEventListener('touchmove', function(e) {
+                // 阻止页面原生滚动
+                e.preventDefault();
+            }, { passive: false });
+        });
+    </script>
+</body>
+</html>
