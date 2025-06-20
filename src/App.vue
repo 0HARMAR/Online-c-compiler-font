@@ -2,178 +2,17 @@
   <div class="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200">
     <!-- 添加 Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <nav class="bg-gradient-to-r from-primary-600 to-primary-400 shadow-lg backdrop-blur-lg bg-opacity-90 sticky top-0 z-50">
-      <div class="w-full px-4">
-        <div class="flex justify-between h-16">
-          <div class="flex items-center">
-            <div class="flex-shrink-0">
-              <router-link to="/" class="nav__title">
-                <span class="icon">💻</span>
-                <h1>Online C Compiler</h1>
-              </router-link>
-            </div>
-            <div class="ml-10">
-              <div class="flex space-x-4">
-                <router-link
-                  v-for="item in navigation"
-                  :key="item.name"
-                  :to="item.href"
-                  :class="[
-                    $route.path === item.href
-                      ? 'bg-primary-700 text-white transform scale-105'
-                      : 'text-white hover:bg-primary-500 hover:transform hover:scale-105',
-                    'px-3 py-2 rounded-md text-sm font-medium transition-all duration-300'
-                  ]"
-                >
-                  {{ item.name }}
-                </router-link>
-              </div>
-            </div>
-          </div>
-          <div class="flex items-center">
-            <template v-if="isLoggedIn">
-              <span class="text-white mr-4 font-medium">{{ username }}</span>
-              <button
-                @click="handleLogout"
-                class="bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-primary-800 transform hover:scale-105 transition-all duration-300"
-              >
-                退出
-              </button>
-            </template>
-            <template v-else>
-              <button
-                @click="showLoginDialog"
-                class="bg-primary-700 text-white p-2 rounded-full hover:bg-primary-800 transform hover:scale-105 transition-all duration-300 flex items-center justify-center"
-                title="登录"
-              >
-                <i class="fas fa-user-circle text-xl"></i>
-              </button>
-            </template>
-          </div>
-        </div>
-      </div>
-    </nav>
-
-    <!-- 根据路由显示不同内容 -->
+    <NavBar
+      :is-logged-in="isLoggedIn"
+      :username="username"
+      :navigation="navigation"
+      @logout="handleLogout"
+      @show-login="showLoginDialog"
+    />
     <div v-if="$route.path === '/'">
-    <!-- 滑动首页内容 -->
-    <div class="progress-container">
-      <div class="progress-item active" data-index="0"></div>
-      <div class="progress-item" data-index="1"></div>
-      <div class="progress-item" data-index="2"></div>
-      <div class="progress-item" data-index="3"></div>
-    </div>
-    <div class="scroll-container" id="scrollContainer">
-      <!-- 第一部分 -->
-      <section id="section-1" class="active">
-        <div class="content">
-          <div class="text-content">
-            <h1 class="text-5xl font-extrabold text-primary-800 mb-6">创建杰出的开发体验</h1>
-            <div class="card">
-              <!-- <h2>智能代码编辑器</h2> -->
-              <p>高级代码编辑功能，实时错误检测，智能代码补全以及深度的代码分析。无论项目规模如何，都能提供无与伦比的开发效率。</p>
-            </div>
-            <div class="flex mt-8">
-              <router-link to="/compile" class="btn px-4 py-2 text-base">开始体验 <i class="fas fa-arrow-right"></i></router-link>
-            </div>
-          </div>
-          <div class="graphic-content">
-            <div class="graphic">
-              <div class="graphic-inner">
-                <i class="fas fa-code"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="footer">
-          <p>滚动继续浏览更多功能</p>
-        </div>
-      </section>
-      <!-- 第二部分 -->
-      <section id="section-2">
-        <div class="content">
-          <div class="graphic-content">
-            <div class="graphic">
-              <div class="graphic-inner">
-                <i class="fas fa-tools"></i>
-              </div>
-            </div>
-          </div>
-          <div class="text-content">
-            <h1 class="text-5xl font-extrabold text-primary-800 mb-6">强大开发工具</h1>
-            <div class="card">
-              <!-- <h2>强大开发工具</h2> -->
-              <p>集成调试器、版本控制、数据库工具、测试运行器、部署工具等功能于一身的开发环境，让您只需一个应用程序即可完成所有开发工作。</p>
-            </div>
-            <div class="flex mt-8">
-              <router-link to="/compile" class="btn">探索工具 <i class="fas fa-arrow-right"></i></router-link>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- 第三部分 -->
-      <section id="section-3">
-        <div class="content">
-          <div class="text-content">
-            <h1 class="text-5xl font-extrabold text-primary-800 mb-6">高效的代码调试</h1>
-            <div class="card">
-              <!-- <h2>高效的代码调试</h2> -->
-              <p>高级断点系统、表达式评估、变量监控等功能强大且直观的调试工具，让您在开发过程中能够快速定位和解决问题。</p>
-              <div class="code-block">
-                <div class="code-header">
-                  <span>debug_demo.js</span>
-                  <span>JavaScript</span>
-                </div>
-                <div class="code-content">
-                  function calculateFactorial(n) {<br>
-                  &nbsp;&nbsp;if (n === 0) return 1;<br>
-                  &nbsp;&nbsp;return n * calculateFactorial(n - 1);<br>
-                  }<br><br>
-                </div>
-              </div>
-            </div>
-            <div class="flex mt-8">
-              <router-link to="/terminal" class="btn">学习调试 <i class="fas fa-arrow-right"></i></router-link>
-            </div>
-          </div>
-          <div class="graphic-content">
-            <div class="graphic">
-              <div class="graphic-inner">
-                <i class="fas fa-bug"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- 第四部分 -->
-      <section id="section-4">
-        <div class="content">
-          <div class="graphic-content">
-            <div class="graphic">
-              <div class="graphic-inner">
-                <i class="fas fa-lightbulb"></i>
-              </div>
-            </div>
-          </div>
-          <div class="text-content">
-            <h1 class="text-5xl font-extrabold text-primary-800 mb-6">智能重构</h1>
-            <div class="card">
-              <!-- <h2>智能重构</h2> -->
-              <p>强大的重构工具，帮助您安全而高效地改进代码结构。无论是重命名标识符、提取方法、变量或接口，还是更改函数签名，都能轻松应对。</p>
-            </div>
-            <div class="flex mt-8">
-              <router-link to="/projects" class="btn">立即体验 <i class="fas fa-arrow-right"></i></router-link>
-            </div>
-          </div>
-        </div>
-        <div class="footer">
-          <p>现代化开发工具集</p>
-        </div>
-      </section>
-    </div>
+      <HomeSections />
     </div>
     <router-view v-else></router-view>
-
     <footer class="bg-gradient-to-r from-primary-50 to-primary-100 mt-auto">
       <div class="w-full py-4 px-4">
         <p class="text-center text-gray-500 text-sm">
@@ -181,44 +20,11 @@
         </p>
       </div>
     </footer>
-
-    <!-- 登录对话框 -->
-    <el-dialog v-model="loginDialogVisible" title="登录" width="30%" class="rounded-lg">
-      <div class="space-y-6">
-        <div>
-          <label class="block text-sm font-medium text-gray-700">用户名</label>
-          <input
-            type="text"
-            v-model="loginForm.username"
-            class="mt-1 input w-full"
-          />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700">密码</label>
-          <input
-            type="password"
-            v-model="loginForm.password"
-            class="mt-1 input w-full"
-          />
-        </div>
-      </div>
-      <template #footer>
-        <div class="flex justify-end space-x-3">
-          <button
-            @click="loginDialogVisible = false"
-            class="btn bg-gray-100 text-gray-700 hover:bg-gray-200"
-          >
-            取消
-          </button>
-          <button
-            @click="handleLogin"
-            class="btn btn-primary"
-          >
-            登录
-          </button>
-        </div>
-      </template>
-    </el-dialog>
+    <LoginDialog
+      v-model="loginDialogVisible"
+      :loginForm="loginForm"
+      @login="handleLogin"
+    />
   </div>
 </template>
 
@@ -227,6 +33,9 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import NavBar from './components/NavBar.vue'
+import HomeSections from './components/HomeSections.vue'
+import LoginDialog from './components/LoginDialog.vue'
 
 // 配置 axios
 axios.defaults.timeout = 5000
@@ -283,50 +92,6 @@ onMounted(() => {
     isLoggedIn.value = true
     username.value = localStorage.getItem('username') || ''
   }
-
-  const scrollContainer = document.getElementById('scrollContainer');
-  const sections = document.querySelectorAll('section');
-  const progressItems = document.querySelectorAll('.progress-item');
-  let currentSection = 0;
-  if (!scrollContainer) return;
-  scrollContainer.addEventListener('scroll', function() {
-    const scrollPosition = scrollContainer.scrollTop;
-    const sectionHeight = window.innerHeight;
-    const newSection = Math.round(scrollPosition / sectionHeight);
-    if (newSection !== currentSection) {
-      sections.forEach((section, index) => {
-        if (index === newSection) {
-          section.classList.add('active');
-        } else {
-          section.classList.remove('active');
-        }
-      });
-      progressItems.forEach((item, index) => {
-        if (index === newSection) {
-          item.classList.add('active');
-        } else {
-          item.classList.remove('active');
-        }
-      });
-      currentSection = newSection;
-    }
-  });
-  progressItems.forEach(item => {
-    item.addEventListener('click', function() {
-      const index = parseInt(this.dataset.index);
-      scrollContainer.scrollTo({
-        top: index * window.innerHeight,
-        behavior: 'smooth'
-      });
-    });
-  });
-  let touchStartY = 0;
-  scrollContainer.addEventListener('touchstart', function(e) {
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-  scrollContainer.addEventListener('touchmove', function(e) {
-    e.preventDefault();
-  }, { passive: false });
 })
 
 const showLoginDialog = () => {
