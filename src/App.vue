@@ -36,6 +36,7 @@ import { ElMessage } from 'element-plus'
 import NavBar from './components/NavBar.vue'
 import HomeSections from './components/HomeSections.vue'
 import LoginDialog from './components/LoginDialog.vue'
+import Manual from './views/Manual.vue'
 
 // 配置 axios
 axios.defaults.timeout = 5000
@@ -83,7 +84,8 @@ const loginForm = ref({
 const navigation = [
   { name: '编辑器', href: '/compile' },
   { name: '终端', href: '/terminal' },
-  { name: '项目管理', href: '/projects' }
+  { name: '项目管理', href: '/projects' },
+  {name: '智能手册', href: '/manual'}
 ]
 
 onMounted(() => {

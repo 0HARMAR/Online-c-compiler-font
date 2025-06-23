@@ -1,14 +1,6 @@
 <template>
   <div class="projects">
     <div class="projects__container">
-      <!-- Title Section -->
-      <div class="projects__title">
-        <router-link to="/" class="title-link">
-          <span class="icon">💻</span>
-          <h1>Online C Compiler</h1>
-        </router-link>
-      </div>
-
       <!-- Upload Section -->
       <div class="projects__section upload-section">
         <div class="section__header">
